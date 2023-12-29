@@ -11,12 +11,11 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+
 
 public interface TableRepository extends JpaRepository<Table,Long> {
     Page<Table> findAllByTableNameContaining(String name, Pageable pageable);
-
+    Page<Table> findAllByTableNameContainingAndStatus(String name,boolean status, Pageable pageable);
     boolean existsByTableName(String tableName);
 
     @Query("SELECT " +
@@ -35,5 +34,18 @@ public interface TableRepository extends JpaRepository<Table,Long> {
     List<TableStatusByTime> findTableStatusByTime(@Param("start") LocalTime start,
                                                @Param("end") LocalTime end,
                                                @Param("date") Date date);
+
+
+    @Query("SELECT CASE WHEN COUNT(T) > 0 THEN true ELSE false END " +
+            "FROM Table T " +
+            "JOIN Reservation R ON R.table.id = T.id " +
+            "WHERE T.id = :tableId " +
+            "      AND R.bookingDate = :date " +
+            "      AND ((R.start BETWEEN :startTime AND :endTime) " +
+            "           OR (R.end BETWEEN :startTime AND :endTime))")
+    boolean isTableReserved(@Param("tableId") Long tableId,
+                            @Param("date") Date date,
+                            @Param("startTime") LocalTime startTime,
+                            @Param("endTime") LocalTime endTime);
 
 }

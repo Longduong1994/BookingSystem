@@ -55,13 +55,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests((auth) ->
-                        auth.requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/users/**").hasAuthority("ADMIN")
-                                .requestMatchers("/categories/**").hasAuthority("ADMIN")
-                                .requestMatchers("/dishes/**").hasAuthority("ADMIN")
-                                .requestMatchers("/tables/**").hasAuthority("ADMIN")
-                                .requestMatchers("/reservation/**").hasAuthority("ADMIN")
-                                .requestMatchers("/menus/**").hasAuthority("ADMIN")
+                        auth.requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers("/api/v1/home/**").hasAuthority("USER")
+                                .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                                 .anyRequest().authenticated())
                 .exceptionHandling((auth) ->
                         auth.authenticationEntryPoint(jwtEntryPoint))

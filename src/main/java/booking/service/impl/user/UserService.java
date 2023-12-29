@@ -112,19 +112,7 @@ public class UserService implements IUserService {
         return userResponse;
     }
 
-    @Override
-    public String logout(Authentication authentication) throws ExistsException {
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String token = request.getHeader("Authorization");
-        if (!jwtProvider.getUsernameFromToken(token).equals(userPrincipal.getUser().getUsername())){
-            throw new ExistsException("You have no rights");
-        }
-        // Xử lý token...
 
-
-        return "Logout Successfully";
-    }
     @Override
     public String changePassword(ChangePasswordDto changePasswordDto,Authentication authentication) throws LoginException, ExistsException {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -183,5 +171,31 @@ public class UserService implements IUserService {
             return "Log in to gmail to get the confirmation code";
         }
         return "Email address incorrect";
+    }
+
+    public  boolean hasAdminRole(User user) {
+        if (user != null && user.getRoles() != null) {
+            return user.getRoles().stream().anyMatch(role -> "ADMIN".equals(role.getRoleName()));
+        }
+        return false;
+    }
+
+    public User getUser(Authentication authentication) throws LoginException {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        if (userPrincipal==null){
+            throw new LoginException("You need to login to use service");
+        }
+       return  userPrincipal.getUser();
+    }
+
+    @Override
+    public String changStatus(Long id) throws NotFoundException {
+        User user = userRepository.findById(id).get();
+        if (user == null) {
+            throw new NotFoundException("User " + id + " not found");
+        }
+        user.setStatus(!user.isStatus());
+        userRepository.save(user);
+        return "Successfully";
     }
 }

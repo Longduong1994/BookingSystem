@@ -14,6 +14,5 @@ public class MenuResponse {
     private double price;
     private int quantityOrdered;
     private int quantityDelivered;
-    private String menuStatus;
 
 }

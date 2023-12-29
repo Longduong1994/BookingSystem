@@ -12,6 +12,5 @@ public class TableResponse {
     private String tableName;
     private int capacity;
     private String description;
-    private int stock;
     private boolean status;
 }

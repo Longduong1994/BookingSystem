@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateMenuRequest {
+public class ServedMenuDto {
+    @NotNull(message = "The 'menu id' field cannot be left blank.")
+    private Long menuId;
     @NotNull(message = "The 'reservation id' field cannot be left blank.")
     private Long reservationId;
     @Min(value = 1, message = "Quantity must be greater than 0.")

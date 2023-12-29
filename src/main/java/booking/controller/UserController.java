@@ -1,22 +1,19 @@
 package booking.controller;
 
 import booking.dto.response.UserResponseDto;
-import booking.exception.ExistsException;
+import booking.exception.NotFoundException;
 import booking.service.impl.user.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/admin/users")
 @AllArgsConstructor
 public class UserController {
     private final IUserService userService;
-
     @GetMapping
     public ResponseEntity<Page<UserResponseDto>> findAll(@RequestParam(defaultValue = "") String username,
                                                          @RequestParam(defaultValue = "0") int page,
@@ -26,8 +23,9 @@ public class UserController {
         return new ResponseEntity<>(userService.findAll(username, page, size, field, by), HttpStatus.OK);
     }
 
-    @GetMapping("/logout")
-    public ResponseEntity<?> logout(Authentication authentication) throws ExistsException {
-        return new ResponseEntity<>(userService.logout(authentication),HttpStatus.OK);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> lockAndUnLock(@PathVariable Long id) throws NotFoundException {
+        return new ResponseEntity<>(userService.changStatus(id),HttpStatus.LOCKED);
     }
+
 }

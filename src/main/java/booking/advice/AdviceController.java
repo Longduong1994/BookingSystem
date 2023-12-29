@@ -56,6 +56,20 @@ public class AdviceController {
     public ResponseEntity<String> invalid(InvalidException invalidException){
         return new ResponseEntity<>(invalidException.getMessage(),HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(EmptyException.class)
+    public ResponseEntity<String> empty(EmptyException emptyException){
+        return new ResponseEntity<>(emptyException.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> noValue(NoSuchElementException noSuchElementException){
+        return new ResponseEntity<>(noSuchElementException.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(OverCapacityException.class)
+    public ResponseEntity<String> over(OverCapacityException overCapacityException){
+        return new ResponseEntity<>(overCapacityException.getMessage(),HttpStatus.BAD_REQUEST);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> invalidRegister(MethodArgumentNotValidException ex) {
         Map<String, String> error = new HashMap();

@@ -26,6 +26,11 @@ public class TableService implements ITableService{
     private final TableMapper tableMapper;
 
     @Override
+    public Page<TableResponse> findAllByStatus(String name, int page, int size) {
+        return tableRepository.findAllByTableNameContainingAndStatus(name,true,PageRequest.of(page,size)).map(tableMapper::toResponse);
+    }
+
+    @Override
     public Page<TableResponse> findAll(String name, int page, int size) {
         return tableRepository.findAllByTableNameContaining(name, PageRequest.of(page, size)).map(tableMapper::toResponse);
     }

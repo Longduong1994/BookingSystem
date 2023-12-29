@@ -18,7 +18,7 @@ import java.time.LocalTime;
 import java.util.Date;
 
 @RestController
-@RequestMapping("/tables")
+@RequestMapping("api/v1/admin/tables")
 @AllArgsConstructor
 public class TableController {
     private final ITableService tableService;
@@ -40,27 +40,17 @@ public class TableController {
         return new ResponseEntity<>(tableService.create(tableRequest),HttpStatus.OK);
     }
 
-    @PostMapping("{id}")
+    @PutMapping("{id}")
     public ResponseEntity<TableResponse> update(@Valid @RequestBody TableRequest tableRequest, @PathVariable Long id)throws ExistsException{
         return new ResponseEntity<>(tableService.update(tableRequest, id),HttpStatus.OK);
     }
 
-    @GetMapping("/status/{id}")
+    @PutMapping("/status/{id}")
     public ResponseEntity<?> changeStatus(@PathVariable Long id) throws NotFoundException {
         return new ResponseEntity<>(tableService.changeStatus(id),HttpStatus.OK);
     }
 
-    @GetMapping("/status")
-    public ResponseEntity<?> getByStatus(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date,
-            @RequestParam(defaultValue = "10:00") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime start,
-            @RequestParam(defaultValue = "11:00") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime end) {
 
-        if (date == null) {
-            date = new Date();
-        }
-        return new ResponseEntity<>(tableService.findByTime(date, start, end), HttpStatus.OK);
-    }
 
 
 }

@@ -24,6 +24,4 @@ public class Menu {
     private int quantityOrdered;
     private int quantityDelivered;
     private double price;
-    @Enumerated(EnumType.STRING)
-    private MenuStatus menuStatus;
 }

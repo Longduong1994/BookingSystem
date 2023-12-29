@@ -15,8 +15,8 @@ import java.util.Objects;
 
 public interface ITableService {
 
+    Page<TableResponse> findAllByStatus(String name,int page,int size);
     Page<TableResponse> findAll(String name,int page,int size);
-
     TableResponse findById(Long id) throws NotFoundException;
     TableResponse create(TableRequest tableRequest) throws ExistsException;
     TableResponse update(TableRequest tableRequest,Long id) throws ExistsException;

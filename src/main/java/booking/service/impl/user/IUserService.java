@@ -22,11 +22,14 @@ public interface IUserService {
 
     UserResponse login(LoginDto loginDto) throws LoginException;
 
-    String logout(Authentication authentication) throws ExistsException;
-
     String changePassword(ChangePasswordDto changePasswordDto, Authentication authentication) throws LoginException, ExistsException;
 
     String forgotPassword(ForgotPasswordDto forgotPasswordDto) throws LoginException, InvalidException, OutOfDateException;
 
     String sendVerification(String email);
+
+    boolean hasAdminRole(User user);
+    User getUser(Authentication authentication)throws LoginException;
+
+    String changStatus(Long id) throws NotFoundException;
 }

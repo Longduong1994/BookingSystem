@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("api/v1/admin/categories")
 @AllArgsConstructor
 public class CategoryController {
     private final ICategoryService categoryService;
@@ -27,12 +27,12 @@ public class CategoryController {
       return new ResponseEntity<>(categoryService.create(categoryRequest), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> update(@RequestBody CategoryRequest categoryRequest,@PathVariable Long id){
         return new ResponseEntity<>(categoryService.update(categoryRequest,id), HttpStatus.OK);
     }
 
-    @PatchMapping("/lock/{id}")
+    @DeleteMapping("/lock/{id}")
     public ResponseEntity<?> lock(@PathVariable Long id){
         return new ResponseEntity<>(categoryService.lock(id), HttpStatus.OK);
     }

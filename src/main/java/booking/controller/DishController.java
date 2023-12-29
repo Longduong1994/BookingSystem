@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/dishes")
+@RequestMapping("api/v1/admin/dishes")
 @AllArgsConstructor
 public class DishController {
     private final IDishService dishService;
@@ -26,21 +26,12 @@ public class DishController {
         return new ResponseEntity<>(dishService.findAll(name,page,size,min,max), HttpStatus.OK);
     }
 
-    @GetMapping("/users")
-    public ResponseEntity<?> findAllByStatus(@RequestParam(defaultValue = "") String name,
-                                     @RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "5") int size,
-                                     @RequestParam(defaultValue = "0") double min,
-                                     @RequestParam(defaultValue = "" + Double.MAX_VALUE) double max){
-        return new ResponseEntity<>(dishService.findAllByStatus(name,page,size,min,max), HttpStatus.OK);
-    }
-
     @PostMapping
     public ResponseEntity<DishResponse> create(@ModelAttribute @Valid DishRequest dishRequest) throws ExistsException {
         return new ResponseEntity<>(dishService.create(dishRequest),HttpStatus.CREATED);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<DishResponse> update(@ModelAttribute @Valid DishRequest dishRequest,@PathVariable Long id) throws ExistsException {
         return new ResponseEntity<>(dishService.update(dishRequest,id),HttpStatus.OK);
     }
@@ -49,5 +40,12 @@ public class DishController {
     public ResponseEntity<?> lock(@PathVariable Long id) throws NotFoundException {
         return new ResponseEntity<>(dishService.delete(id),HttpStatus.OK);
     }
+    @PutMapping("/status/{id}")
+    public ResponseEntity<?> changeStatus(@PathVariable Long id) throws NotFoundException {
+        return new ResponseEntity<>(dishService.changeStatus(id),HttpStatus.OK);
+    }
+
+
+
 
 }

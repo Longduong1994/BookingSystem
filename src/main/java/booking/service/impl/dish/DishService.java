@@ -14,7 +14,11 @@ import lombok.AllArgsConstructor;
 import org.hibernate.annotations.NotFound;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,8 +33,15 @@ public class DishService  implements IDishService{
     }
 
     @Override
-    public Page<DishResponse> findAllByStatus(String name, int page, int size, double min, double max) {
-        return dishRepository.findAllByProductNameContainingAndPriceBetweenAndStatus(name,min,max,PageRequest.of(page, size)).map(dishMapper::toResponse);
+    public Page<DishResponse> findAllByStatus(String name,String field,String by, int page, int size, double min, double max) {
+        Sort sort = Sort.by(field);
+
+        if (by.equalsIgnoreCase("desc")) {
+            sort = sort.descending();
+        } else {
+            sort = sort.ascending();
+        }
+        return dishRepository.findAllByProductNameContainingAndPriceBetweenAndStatus(name,min,max,PageRequest.of(page, size).withSort(sort)).map(dishMapper::toResponse);
     }
 
     @Override
@@ -69,5 +80,21 @@ public class DishService  implements IDishService{
             return "Delete successfully";
         }
         throw  new NotFoundException("Item not found");
+    }
+
+    @Override
+    public String changeStatus(Long id) throws NotFoundException {
+        Dish dish = dishRepository.findById(id).get();
+        if (dish != null) {
+            dish.setStatus(!dish.isStatus());
+            dishRepository.save(dish);
+            return "Change status successfully";
+        }
+        throw  new NotFoundException("Item not found");
+    }
+
+    @Override
+    public List<DishResponse> findTopFive() {
+        return dishRepository.findDishTopFive().stream().map(dishMapper::toResponse).collect(Collectors.toList());
     }
 }
